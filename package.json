@@ -1,0 +1,13 @@
+{
+  "name": "NewtonBlakeWebsiteReact",
+  "version": "1.0.0",
+  "description": "React frontend for Newton Blake Website",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 3000",
+    "dev": "python -m http.server 8080"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
