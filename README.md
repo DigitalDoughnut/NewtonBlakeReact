@@ -5,97 +5,61 @@ A React-based frontend for the Newton Blake portfolio website that integrates wi
 ## Features
 
 - **Responsive Design**: Works seamlessly on desktop, tablet, and mobile devices
-- **Multi-Page Navigation**: Home, Portfolio, Design, and About pages
-- **Comments System**: Users can leave comments on any page (using localStorage)
+- **Multi-Page Navigation**: Home, Design, Lifestyle, Travel, and About pages
+- **Comments System**: Users can leave comments on any page via WordPress REST API
 - **Modern UI**: Clean, professional design with smooth animations
-- **React-based**: Built with React using CDN-based distribution for compatibility
+- **React-based**: Built with React using CDN-based distribution
+- **Hash-based Routing**: URL updates with page navigation (e.g., `/#/design`)
 
-## Structure
+## Quick Start
 
-- `index.html` - Main HTML entry point
-- `app.jsx` - React application and components
-- `style.css` - Styling for all pages
-- `package.json` - Project metadata
+1. Place this folder in your web server's public directory (e.g., `htdocs`)
+2. Ensure WordPress is running at `http://localhost/wordpress`
+3. Open `http://localhost/NewtonBlakeWebsiteReact/` in your browser
 
-## Running the Project
+## File Structure
 
-Since this project uses React from CDN, you can run it directly without a build step:
+- `index.html` - Main HTML file with embedded React application
+- `style.css` - Complete styling for all pages and components
+- `README.md` - This file
 
-### Option 1: Using Python HTTP Server
-```bash
-cd c:\xampp\htdocs\NewtonBlakeWebsiteReact
-python -m http.server 8080
-```
+## How It Works
 
-Then visit: `http://localhost:8080/`
-
-### Option 2: Using PHP Built-in Server
-```bash
-cd c:\xampp\htdocs\NewtonBlakeWebsiteReact
-php -S localhost:8080
-```
-
-### Option 3: Using XAMPP
-If you want to access it as `http://localhost/NewtonBlakeWebsiteReact/design`, ensure it's in the htdocs folder (it already is) and access it through your XAMPP server.
+The application:
+1. Fetches page content from the WordPress REST API at `http://localhost/wordpress/wp-json/wp/v2/pages`
+2. Displays pages with featured images, author information, and metadata
+3. Allows users to post comments directly to WordPress
+4. Uses hash-based routing for navigation (`/#/home`, `/#/design`, etc.)
 
 ## Pages
 
-### Home
-- Welcome message
-- Call-to-action buttons
-- Comments section
-
-### Portfolio
-- Grid of portfolio items
-- Showcases projects with emoji placeholders
-- Comments section
-
-### Design
-- Design philosophy explanation
-- Four design principle cards
-- Comments section
-
-### About
-- Personal biography
-- Journey in design
-- Skills and expertise
-- Philosophy
-- Comments section
+- **Home** - Welcome page with site introduction
+- **Design** - Design philosophy and portfolio
+- **Lifestyle** - Lifestyle content and photography
+- **Travel** - Travel photography and experiences
+- **About** - Biography and background information
 
 ## Comments System
 
-Comments are stored locally using the browser's localStorage. Each page has its own comments section:
-- `comments-home`
-- `comments-portfolio`
-- `comments-design`
-- `comments-about`
-
-To integrate with the WordPress backend, uncomment the `postComment()` function call in the `CommentsSection` component and ensure your WordPress REST API is properly configured.
-
-## Integration with WordPress Backend
-
-The application is designed to work with the existing WordPress backend at `http://localhost/NewtonBlakeWebsite/`. To enable WordPress integration:
-
-1. Ensure the WordPress site is running on the same local server
-2. Uncomment the WordPress comment posting code in `app.jsx`
-3. Configure your WordPress REST API to accept CORS requests from the React frontend
-
-## Customization
-
-- **Colors**: Modify the color values in `style.css`
-- **Portfolio Items**: Edit the `portfolioItems` array in `PortfolioPage` component
-- **Design Principles**: Update the design items in `DesignPage` component
-- **About Content**: Modify the text in `AboutPage` component
+Comments are fetched from and posted to the WordPress REST API. The comments section is collapsible on each page for a clean user experience.
 
 ## Browser Support
 
-Works in all modern browsers that support ES6 and React 19:
-- Chrome/Edge
-- Firefox
-- Safari
+Works in all modern browsers that support ES6 and React 18:
+- Chrome/Edge 90+
+- Firefox 88+
+- Safari 14+
 
-## Notes
+## Customization
 
-- The project uses Babel standalone for JSX compilation in the browser
-- Comments persist in localStorage (survives page refreshes but not browser cache clear)
-- Images/emojis are used as placeholders for portfolio items
+To customize content or styling:
+- Edit page content in WordPress (pages with slugs: home, design, lifestyle, travel, about)
+- Modify colors and styles in `style.css`
+- Update React components directly in the `<script type="text/babel">` section of `index.html`
+
+## Technologies Used
+
+- React 18 (via CDN)
+- Babel Standalone (for JSX transpilation)
+- WordPress REST API
+- CSS3 with custom properties
