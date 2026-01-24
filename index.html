@@ -194,10 +194,16 @@
             // Valid page slugs
             const validSlugs = ['home', 'design', 'lifestyle', 'travel', 'about'];
 
-            // Get current page from hash
-            const getSlugFromHash = () => {
-                const hash = window.location.hash.substring(2); // Remove '#/'
-                return hash || 'home';
+            // Get current page from path
+            const getSlugFromPath = () => {
+                const path = window.location.pathname;
+                const baseUrl = '/NewtonBlakeWebsiteReact/';
+                
+                if (path === baseUrl || path === baseUrl + 'home') return 'home';
+                
+                // Extract slug from path (e.g., /NewtonBlakeWebsiteReact/design -> design)
+                const slug = path.replace(baseUrl, '').replace(/\/$/, '') || 'home';
+                return slug;
             };
 
             // Fetch page from WordPress
@@ -238,27 +244,33 @@
                 }
             };
 
-            // Load page when hash changes
+            // Load page when path changes
             useEffect(() => {
-                const handleHashChange = () => {
-                    const slug = getSlugFromHash();
+                const handlePopState = () => {
+                    const slug = getSlugFromPath();
                     setCurrentPage(slug);
                     fetchPage(slug);
                 };
 
-                window.addEventListener('hashchange', handleHashChange);
+                window.addEventListener('popstate', handlePopState);
                 
                 // Initial load
-                const initialSlug = getSlugFromHash();
+                const initialSlug = getSlugFromPath();
                 setCurrentPage(initialSlug);
                 fetchPage(initialSlug);
 
-                return () => window.removeEventListener('hashchange', handleHashChange);
+                return () => window.removeEventListener('popstate', handlePopState);
             }, []);
 
             const handleNavClick = (page) => {
-                window.location.hash = `#/${page}`;
+                const newPath = page === 'home' 
+                    ? '/NewtonBlakeWebsiteReact/' 
+                    : `/NewtonBlakeWebsiteReact/${page}`;
+                
+                window.history.pushState(null, '', newPath);
+                setCurrentPage(page);
                 setMenuOpen(false);
+                fetchPage(page);
             };
 
             return (
