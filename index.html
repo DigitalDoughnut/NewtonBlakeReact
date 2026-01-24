@@ -190,9 +190,7 @@
             const [loading, setLoading] = useState(false);
             const [error, setError] = useState(null);
             const [menuOpen, setMenuOpen] = useState(false);
-
-            // Valid page slugs
-            const validSlugs = ['home', 'design', 'lifestyle', 'travel', 'about'];
+            const [pages, setPages] = useState([]); // Store available pages from WordPress
 
             // Get current page from path
             const getSlugFromPath = () => {
@@ -206,10 +204,31 @@
                 return slug;
             };
 
+            // Fetch all pages from WordPress to populate navigation
+            const fetchAllPages = async () => {
+                try {
+                    const response = await fetch(`${WP_API_ENDPOINT}?per_page=100&orderby=menu_order&order=asc`);
+                    if (response.ok) {
+                        const data = await response.json();
+                        // Extract slug and title from each page
+                        const pageList = data.map(page => ({
+                            slug: page.slug,
+                            title: page.title.rendered
+                        }));
+                        setPages(pageList);
+                    }
+                } catch (err) {
+                    console.error('Failed to fetch pages list:', err);
+                }
+            };
+
             // Fetch page from WordPress
             const fetchPage = async (slug) => {
-                if (!validSlugs.includes(slug)) {
-                    window.location.hash = '#/home';
+                // Check if slug is valid (exists in pages from WordPress)
+                const isValidSlug = pages.length === 0 || pages.some(p => p.slug === slug);
+                
+                if (!isValidSlug) {
+                    window.history.pushState(null, '', '/NewtonBlakeWebsiteReact/');
                     return;
                 }
 
@@ -254,6 +273,9 @@
 
                 window.addEventListener('popstate', handlePopState);
                 
+                // Fetch available pages from WordPress on initial load
+                fetchAllPages();
+                
                 // Initial load
                 const initialSlug = getSlugFromPath();
                 setCurrentPage(initialSlug);
@@ -281,11 +303,16 @@
                                 Newton Blake
                             </a>
                             <ul className="nb-nav-inline">
-                                <li><a onClick={() => handleNavClick('home')} className={currentPage === 'home' ? 'nav-link active' : 'nav-link'}>Home</a></li>
-                                <li><a onClick={() => handleNavClick('design')} className={currentPage === 'design' ? 'nav-link active' : 'nav-link'}>Design</a></li>
-                                <li><a onClick={() => handleNavClick('lifestyle')} className={currentPage === 'lifestyle' ? 'nav-link active' : 'nav-link'}>Lifestyle</a></li>
-                                <li><a onClick={() => handleNavClick('travel')} className={currentPage === 'travel' ? 'nav-link active' : 'nav-link'}>Travel</a></li>
-                                <li><a onClick={() => handleNavClick('about')} className={currentPage === 'about' ? 'nav-link active' : 'nav-link'}>About</a></li>
+                                {pages.map(page => (
+                                    <li key={page.slug}>
+                                        <a 
+                                            onClick={() => handleNavClick(page.slug)} 
+                                            className={currentPage === page.slug ? 'nav-link active' : 'nav-link'}
+                                        >
+                                            {page.title}
+                                        </a>
+                                    </li>
+                                ))}
                             </ul>
                             <button 
                                 className="nb-menu-btn"
@@ -305,11 +332,13 @@
                         <nav className="nb-nav active">
                             <button className="nb-close-btn" onClick={() => setMenuOpen(false)}>×</button>
                             <ul>
-                                <li><a onClick={() => handleNavClick('home')} className="nav-link">Home</a></li>
-                                <li><a onClick={() => handleNavClick('design')} className="nav-link">Design</a></li>
-                                <li><a onClick={() => handleNavClick('lifestyle')} className="nav-link">Lifestyle</a></li>
-                                <li><a onClick={() => handleNavClick('travel')} className="nav-link">Travel</a></li>
-                                <li><a onClick={() => handleNavClick('about')} className="nav-link">About</a></li>
+                                {pages.map(page => (
+                                    <li key={page.slug}>
+                                        <a onClick={() => handleNavClick(page.slug)} className="nav-link">
+                                            {page.title}
+                                        </a>
+                                    </li>
+                                ))}
                             </ul>
                         </nav>
                     )}
