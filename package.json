@@ -1,0 +1,24 @@
+{
+  "name": "NewtonBlakeWebsiteReact",
+  "version": "1.0.0",
+  "description": "A React-based frontend for the Newton Blake portfolio website that integrates with the WordPress backend.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "esbuild src/app.jsx --bundle --outfile=dist/app.js --minify --define:process.env.NODE_ENV=\"production\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DigitalDoughnut/NewtonBlakeReact.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DigitalDoughnut/NewtonBlakeReact/issues"
+  },
+  "homepage": "https://github.com/DigitalDoughnut/NewtonBlakeReact#readme",
+  "devDependencies": {
+    "esbuild": "^0.27.3"
+  }
+}
